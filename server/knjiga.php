@@ -11,7 +11,7 @@
     }
     $broker=Broker::getBroker();
     if($metoda=='read'){
-        echo json_encode($broker->vratiKolekciju('select * from  pisac'));
+        echo json_encode($broker->vratiKolekciju("select k.*, z.naziv as 'zanr', p.ime as 'pisac_ime', p.prezime as 'pisac_prezime' from knjiga k inner join zanr z on(k.zanr_id=z.id) left join pisac p on (k.pisac_id=p.id)"));
         exit;
     }
     if($metoda=='delete'){
@@ -23,14 +23,13 @@
             ]);
             exit;
         }
-        echo json_encode($broker->izmeni('delete from  pisac where id='.$id));
+        echo json_encode($broker->izmeni('delete from from  pisac where id='.$id));
         exit;
     }
     if($metoda=='create'){
         $ime=$_POST['ime'];
         $prezime=$_POST['prezime'];
         echo json_encode($broker->izmeni("insert into pisac (ime,prezime) values ('".$ime."','".$prezime."')"));
-        exit;
     }
 
     echo json_encode([
