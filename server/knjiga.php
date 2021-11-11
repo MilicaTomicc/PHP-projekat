@@ -27,11 +27,33 @@
         exit;
     }
     if($metoda=='create'){
-        $ime=$_POST['ime'];
-        $prezime=$_POST['prezime'];
-        echo json_encode($broker->izmeni("insert into pisac (ime,prezime) values ('".$ime."','".$prezime."')"));
+        $naslov=$_POST['naslov'];
+        $opis=$_POST['opis'];
+        $brojStrana=$_POST['brojStrana'];
+        $isbn=$_POST['isbn'];
+        $zanr=$_POST['zanr'];
+        $pisac=$_POST['pisac'];
+        echo json_encode($broker->izmeni("insert into knjiga (naslov,opis,broj_strana,isbn,pisac_id,zanr_id) values ('".$naslov."','".$opis."',".$brojStrana.",'".$isbn."',".$pisac.",".$zanr.")"));
+        exit;
     }
-
+    if($metoda=='update'){
+        $id=$_POST['id'];
+        if(!isset($id) || !intval($id)){
+            echo json_encode([
+                'status'=>false,
+                'error'=>'ID nije odgovarajuci'
+            ]);
+            exit;
+        }
+        $naslov=$_POST['naslov'];
+        $opis=$_POST['opis'];
+        $brojStrana=$_POST['brojStrana'];
+        $isbn=$_POST['isbn'];
+        $zanr=$_POST['zanr'];
+        $pisac=$_POST['pisac'];
+       echo json_encode($broker->izmeni("update knjiga set naslov='".$naslov."',opis='".$opis."',isbn='".$isbn."',broj_strana=".$brojStrana.",pisac_id=".$pisac.",zanr_id=".$zanr." where id=".$id));
+        exit;
+    }
     echo json_encode([
         'status'=>false,
         'error'=>'Metoda nije prosledjena'

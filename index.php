@@ -58,7 +58,7 @@
 
             <div class="col-4">
                 <form class="mt-2" id='forma'>
-                    <h3>
+                    <h3 class="formaKnjiga">
                         Kreiraj knjigu
                     </h3>
                     <div class="form-group">
@@ -87,6 +87,7 @@
                         <textarea required class="form-control" id="opis"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary form-control">Sacuvaj</button>
+                    <button id='vratiSe' hidden class=" mt-2 btn btn-secondary form-control">Vrati se</button>
                 </form>
 
             </div>
@@ -96,7 +97,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
         let knjige = [];
-
+        let selId = 0;
 
         $(function () {
             ucitajKnjige();
@@ -111,14 +112,26 @@
             $('#pisacPretraga').change(() => {
                 popuniTabelu();
             })
+            $('#vratiSe').click(() => {
+                otvoriIzmenu(0);
+            })
             $('#forma').submit(e => {
                 e.preventDefault();
-                const ime = $('#ime').val();
-                const prezime = $('#prezime').val();
-                $.post('./server/pisac.php', {
-                    prezime,
-                    ime,
-                    metoda: 'create'
+                const naslov = $('#naslov').val();
+                const opis = $('#opis').val();
+                const brojStrana = $('#brojStrana').val();
+                const isbn = $('#isbn').val();
+                const zanr = $('#zanr').val();
+                const pisac = $('#pisac').val();
+                $.post('./server/knjiga.php', {
+                    naslov,
+                    opis,
+                    brojStrana,
+                    isbn,
+                    zanr,
+                    pisac,
+                    id: selId,
+                    metoda: selId > 0 ? 'update' : 'create'
                 }).then((val) => {
                     val = JSON.parse(val);
                     if (!val.status) {
@@ -207,6 +220,18 @@
                 <option value='${valF(element)}'>${textF(element)}</option> 
                 `)
             }
+        }
+        function otvoriIzmenu(id) {
+            selId = id;
+            const knjiga = knjige.find(e => e.id == id);
+            $('#formaKnjiga').val(knjiga ? 'Izmeni knjigu' : 'Kreiraj knjigu');
+            $('#vratiSe').attr('hidden', knjiga === undefined);
+            $('#naslov').val(knjiga?.naslov || '');
+            $('#isbn').val(knjiga?.isbn || '');
+            $('#opis').val(knjiga?.opis || '');
+            $('#brojStrana').val(knjiga?.broj_strana || '');
+            $('#zanr').val(knjiga?.zanr_id || '');
+            $('#pisac').val(knjiga?.pisac_id || '');
         }
     </script>
 </body>
