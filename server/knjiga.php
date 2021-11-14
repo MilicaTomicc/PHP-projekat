@@ -23,7 +23,7 @@
             ]);
             exit;
         }
-        echo json_encode($broker->izmeni('delete from from  pisac where id='.$id));
+        echo json_encode($broker->izmeni('delete from  knjiga where id='.$id));
         exit;
     }
     if($metoda=='create'){

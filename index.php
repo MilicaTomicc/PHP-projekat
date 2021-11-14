@@ -58,7 +58,7 @@
 
             <div class="col-4">
                 <form class="mt-2" id='forma'>
-                    <h3 class="formaKnjiga">
+                    <h3 id="formaKnjiga">
                         Kreiraj knjigu
                     </h3>
                     <div class="form-group">
@@ -87,9 +87,9 @@
                         <textarea required class="form-control" id="opis"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary form-control">Sacuvaj</button>
-                    <button id='vratiSe' hidden class=" mt-2 btn btn-secondary form-control">Vrati se</button>
-                </form>
 
+                </form>
+                <button id='vratiSe' hidden class=" mt-2 btn btn-secondary form-control">Vrati se</button>
             </div>
         </div>
     </div>
@@ -138,6 +138,7 @@
                         alert(val.error);
                         return;
                     }
+                    otvoriIzmenu(0);
                     ucitajKnjige();
                 })
             })
@@ -180,7 +181,7 @@
             const pisac = Number($('#pisacPretraga').val());
 
             const filtrirano = knjige.filter(element => {
-                return element.naslov.toLowerCase().includes(pretraga) && (pisac == 0 || Number(element.pisac_id) == pisac) && (zanr == 0 || Number(element.zanr_id) == zanr);
+                return element.naslov.toLowerCase().includes(pretraga.toLowerCase()) && (pisac == 0 || Number(element.pisac_id) == pisac) && (zanr == 0 || Number(element.zanr_id) == zanr);
             })
             $('#tabela').html('');
             for (let knjiga of filtrirano) {
@@ -193,7 +194,7 @@
                         <td>${knjiga.pisac_id ? (knjiga.pisac_ime + ' ' + knjiga.pisac_prezime) : 'Nema'}</td>
                         <td>${knjiga.zanr}</td>
                         <td> 
-                            <button class='btn btn-danger' onClick="otvoriIzmenu(${knjiga.id})">Izmeni</button>    
+                            <button class='btn btn-success' onClick="otvoriIzmenu(${knjiga.id})">Izmeni</button>    
                             <button class='btn btn-danger' onClick="obrisi(${knjiga.id})">Obrisi</button>    
                         </td>
                     </tr>
@@ -211,6 +212,7 @@
                     return;
                 }
                 ucitajKnjige();
+                otvoriIzmenu(0);
             });
         }
 
@@ -224,7 +226,7 @@
         function otvoriIzmenu(id) {
             selId = id;
             const knjiga = knjige.find(e => e.id == id);
-            $('#formaKnjiga').val(knjiga ? 'Izmeni knjigu' : 'Kreiraj knjigu');
+            $('#formaKnjiga').html(knjiga ? 'Izmeni knjigu' : 'Kreiraj knjigu');
             $('#vratiSe').attr('hidden', knjiga === undefined);
             $('#naslov').val(knjiga?.naslov || '');
             $('#isbn').val(knjiga?.isbn || '');
